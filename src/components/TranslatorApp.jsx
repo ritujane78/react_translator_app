@@ -9,6 +9,8 @@ const TranslatorApp = ({onClose}) => {
   const [currentLanguageSelection, setCurrentLanguageSelection] = useState(null);
   const [inputText, setInputText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
+  const [charCount, setCharCount] = useState(0);
+  const maxChars = 200;
   
   const handleLanguageClick = (type) => {
     setCurrentLanguageSelection(type);
@@ -31,7 +33,10 @@ const TranslatorApp = ({onClose}) => {
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setInputText(value);
+    if(value.length <= maxChars){
+      setCharCount(value.length);
+      setInputText(value);
+    }
   }
   const handleTranslate = async () => {
     if(!inputText.trim()){
@@ -42,6 +47,12 @@ const TranslatorApp = ({onClose}) => {
     const data = await response.json();
 
     setTranslatedText(data.responseData.translatedText)
+  }
+  const handleKeyDown = (e) => {
+    if(e.key === "Enter"){
+      e.preventDefault();
+      handleTranslate();
+    }
   }
   return (
     <div className="w-full flex flex-col gap-y-4 justify-center items-center px-6 sm:px-8 pt-12 pb-6 relative">
@@ -56,7 +67,7 @@ const TranslatorApp = ({onClose}) => {
             className="fa-solid fa-arrows-rotate text-2xl mx-8 cursor-pointer"
             onClick={handleSwapLanguages}
           ></i>
-          <div className="language" onClick={() => handleLanguageClick("to")} >
+          <div className="language" onClick={() => handleLanguageClick("to")}  >
             {languages[selectedLanguagesTo] || 'English'}
           </div>
         </div>
@@ -75,10 +86,10 @@ const TranslatorApp = ({onClose}) => {
         <div className="w-full relative">
           <textarea
             className="textarea text-gray-200"
-            value={inputText || ""} onChange={handleInputChange}
+            value={inputText || ""} onChange={handleInputChange} onKeyDown={handleKeyDown}
           ></textarea>
           <div className="absolute bottom-2 right-4 text-gray-400">
-            0/200
+            {charCount} / {maxChars}
           </div>
         </div>
         <button
