@@ -7,6 +7,8 @@ const TranslatorApp = ({onClose}) => {
   const [selectedLanguagesTo, setSelectedLanguagesTo] = useState("en");
   const [showLanguages, setShowLanguages] = useState(false);
   const [currentLanguageSelection, setCurrentLanguageSelection] = useState(null);
+  const [inputText, setInputText] = useState("");
+  const [translatedText, setTranslatedText] = useState("");
   
   const handleLanguageClick = (type) => {
     setCurrentLanguageSelection(type);
@@ -25,6 +27,21 @@ const TranslatorApp = ({onClose}) => {
   const handleSwapLanguages = () => {
     setSelectedLanguagesFrom(selectedLanguagesTo);
     setSelectedLanguagesTo(selectedLanguagesFrom);
+  }
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setInputText(value);
+  }
+  const handleTranslate = async () => {
+    if(!inputText.trim()){
+      setTranslatedText("");
+      return;
+    }
+    const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(inputText)}&langpair=${selectedLanguagesFrom}|${selectedLanguagesTo}`)
+    const data = await response.json();
+
+    setTranslatedText(data.responseData.translatedText)
   }
   return (
     <div className="w-full flex flex-col gap-y-4 justify-center items-center px-6 sm:px-8 pt-12 pb-6 relative">
@@ -58,6 +75,7 @@ const TranslatorApp = ({onClose}) => {
         <div className="w-full relative">
           <textarea
             className="textarea text-gray-200"
+            value={inputText || ""} onChange={handleInputChange}
           ></textarea>
           <div className="absolute bottom-2 right-4 text-gray-400">
             0/200
@@ -66,12 +84,12 @@ const TranslatorApp = ({onClose}) => {
         <button
           className="w-12 h-12 bg-gradient-to-r from-[#b6f492] to-[#338b93] rounded-full text-2xl text-gray-600 flex justify-center items-center active:translate-y-[1px]"
         >
-          <i className="fa-solid fa-chevron-down"></i>
+          <i className="fa-solid fa-chevron-down" onClick={handleTranslate}></i>
         </button>
         <div className="w-full">
           <textarea
             className="textarea text-[#b6f492]"
-            readOnly
+            value={translatedText || " "} readOnly
           ></textarea>
         </div>
       </div>
