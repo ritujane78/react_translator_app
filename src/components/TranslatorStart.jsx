@@ -13,7 +13,7 @@ const TranslatorStart = ({ onStart }) => {
       <div className="w-full text-right space-y-5 mt-20 mb-36">
         <h1 className="font-righteous text-4xl text-white uppercase">Translator App</h1>
         <button
-          className="w-32 h-10 bg-gradient-to-r from-[#b6f492] to-[#338b93] rounded-full font-righteous font-bold text-lg uppercase text-gray-700 tracking-widest active:translate-y-[1px] transition-transform duration-75" onClick={onStart}>
+          className="w-32 h-10 bg-gradient-to-r from-[#b6f492] to-[#338b93] rounded-full font-righteous font-bold text-lg uppercase text-gray-700 tracking-widest active:translate-y-[1px] transition-transform duration-75 cursor-pointer" onClick={onStart}>
             Start
         </button>
       </div>

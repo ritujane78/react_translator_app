@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {languages} from '../languagesData';
 
 const TranslatorApp = ({onClose}) => {
@@ -11,7 +11,18 @@ const TranslatorApp = ({onClose}) => {
   const [translatedText, setTranslatedText] = useState("");
   const [charCount, setCharCount] = useState(0);
   const maxChars = 200;
+  const dropdownRef = useRef(null);
   
+  useEffect(() => {
+    if(showLanguages){
+      document.addEventListener("mousedown", handleClickOutside);
+    } else{
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showLanguages])
   const handleLanguageClick = (type) => {
     setCurrentLanguageSelection(type);
     setShowLanguages(true);
@@ -54,6 +65,9 @@ const TranslatorApp = ({onClose}) => {
       handleTranslate();
     }
   }
+  const handleClickOutside = () => {
+    setShowLanguages(false);
+  }
   return (
     <div className="w-full flex flex-col gap-y-4 justify-center items-center px-6 sm:px-8 pt-12 pb-6 relative">
         <button className="absolute top-4 right-4" onClick={onClose}>
@@ -73,7 +87,7 @@ const TranslatorApp = ({onClose}) => {
         </div>
         {showLanguages && (
           <div className="w-[calc(100%-4rem)] h-[calc(100%-9rem)] bg-gradient-to-r from-[#b6f492] to-[#338b93] absolute top-32 
-        left-8 z-10 rounded shadow-lg p-4 overflow-y-scroll scrollbar-hide" >
+        left-8 z-10 rounded shadow-lg p-4 overflow-y-scroll scrollbar-hide" ref={dropdownRef} >
           <ul>
             {Object.entries(languages).map(([code, name]) => 
             <li className="cursor-pointer transition duration-200 p-2 hover:bg-[#10646b] rounded" key={code} onClick={() => handleLanguagesSelect(code)}>
@@ -93,7 +107,7 @@ const TranslatorApp = ({onClose}) => {
           </div>
         </div>
         <button
-          className="w-12 h-12 bg-gradient-to-r from-[#b6f492] to-[#338b93] rounded-full text-2xl text-gray-600 flex justify-center items-center active:translate-y-[1px]"
+          className="w-12 h-12 bg-gradient-to-r from-[#b6f492] to-[#338b93] rounded-full text-2xl text-gray-600 flex justify-center items-center active:translate-y-[1px] cursor-pointer"
         >
           <i className="fa-solid fa-chevron-down" onClick={handleTranslate}></i>
         </button>
