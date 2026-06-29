@@ -65,9 +65,14 @@ const TranslatorApp = ({onClose}) => {
       handleTranslate();
     }
   }
-  const handleClickOutside = () => {
+  const handleClickOutside = (event) => {
+  if (
+    dropdownRef.current &&
+    !dropdownRef.current.contains(event.target)
+  ) {
     setShowLanguages(false);
   }
+};
   return (
     <div className="w-full flex flex-col gap-y-4 justify-center items-center px-6 sm:px-8 pt-12 pb-6 relative">
         <button className="absolute top-4 right-4" onClick={onClose}>
