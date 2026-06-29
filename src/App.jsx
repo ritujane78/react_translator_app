@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import TranslatorStart from './Components/TranslatorStart';
-import TranslatorApp from './Components/TranslatorApp.jsx';
+import TranslatorStart from './components/TranslatorStart';
+import TranslatorApp from './components/TranslatorApp.jsx';
 
 
 const App = () => {
